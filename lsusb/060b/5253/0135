@@ -1,0 +1,152 @@
+Device Descriptor:
+  bLength                18
+  bDescriptorType         1
+  bcdUSB               2.00
+  bDeviceClass            0 (Defined at Interface level)
+  bDeviceSubClass         0
+  bDeviceProtocol         0
+  bMaxPacketSize0        64
+  idVendor           0x060b
+  idProduct          0x5253
+  bcdDevice            1.35
+  iManufacturer           1 (not requested by the host)
+  iProduct                2 Tt eSPORTS MEKA G UNIT gaming keyboard
+  iSerial                 0 
+  bNumConfigurations      1
+  Configuration Descriptor:
+    wTotalLength           84
+    bNumInterfaces          3
+    bConfigurationValue     1
+    bmAttributes         0xa0
+      (Bus Powered)
+      Remote Wakeup
+    MaxPower             100mA
+    Interface Descriptor:
+      bInterfaceNumber        0
+      bAlternateSetting       0
+      bNumEndpoints           1
+      bInterfaceClass         3 Human Interface Device
+      bInterfaceSubClass      1 Boot Interface Subclass
+      bInterfaceProtocol      1 Keyboard
+      iInterface              0 
+        HID Device Descriptor:
+          bcdHID             1.11
+          bCountryCode           0
+          bNumDescriptors        1
+          bDescriptorType       34 Report
+          wDescriptorLength     65
+         Report Descriptor: (length is 65)
+            05 01 09 06 a1 01 05 07 19 e0 29 e7 15 00 25 01 75 01 95 08 81 02 75 08 95 01 81 01 05 07 19 00 2a ff 00 15 00 26 ff 00 75 08 95 06 81 00 05 08 19 01 29 03 25 01 75 01 95 03 91 02 95 05 91 01 c0
+            05 01            Usage Page 0x1
+            09 06            Usage 0x6
+            a1 01            Collection 0x1
+            05 07            Usage Page 0x7
+            19 e0            Usage Minimum 0xe0
+            29 e7            Usage Maximum 0xe7
+            15 00            Logical Minimum 0x0
+            25 01            Logical Maximum 0x1
+            75 01            Report Size 0x1
+            95 08            Report Count 0x8
+            81 02            Input 0x2
+            75 08            Report Size 0x8
+            95 01            Report Count 0x1
+            81 01            Input 0x1
+            05 07            Usage Page 0x7
+            19 00            Usage Minimum 0x0
+            2a ff 00         Usage Maximum 0xff
+            15 00            Logical Minimum 0x0
+            26 ff 00         Logical Maximum 0xff
+            75 08            Report Size 0x8
+            95 06            Report Count 0x6
+            81 00            Input 0x0
+            05 08            Usage Page 0x8
+            19 01            Usage Minimum 0x1
+            29 03            Usage Maximum 0x3
+            25 01            Logical Maximum 0x1
+            75 01            Report Size 0x1
+            95 03            Report Count 0x3
+            91 02            Output 0x2
+            95 05            Report Count 0x5
+            91 01            Output 0x1
+            c0               End Collection 0x0
+      Endpoint Descriptor:
+        bEndpointAddress     0x81  EP 1 IN
+        bmAttributes            3
+          Transfer Type          Interrupt
+        wMaxPacketSize     0x0008  1x 8 bytes
+        bInterval               1
+    Interface Descriptor:
+      bInterfaceNumber        1
+      bAlternateSetting       0
+      bNumEndpoints           1
+      bInterfaceClass         3 Human Interface Device
+      bInterfaceSubClass      0 No Subclass
+      bInterfaceProtocol      0 None
+      iInterface              0 
+        HID Device Descriptor:
+          bcdHID             1.11
+          bCountryCode           0
+          bNumDescriptors        1
+          bDescriptorType       34 Report
+          wDescriptorLength     25
+         Report Descriptor: (length is 25)
+            05 0c 09 01 a1 01 05 0c 19 00 2a ff 0f 15 00 26 ff 0f 75 10 95 02 81 00 c0
+            05 0c            Usage Page 0xc
+            09 01            Usage 0x1
+            a1 01            Collection 0x1
+            05 0c            Usage Page 0xc
+            19 00            Usage Minimum 0x0
+            2a ff 0f         Usage Maximum 0xfff
+            15 00            Logical Minimum 0x0
+            26 ff 0f         Logical Maximum 0xfff
+            75 10            Report Size 0x10
+            95 02            Report Count 0x2
+            81 00            Input 0x0
+            c0               End Collection 0x0
+      Endpoint Descriptor:
+        bEndpointAddress     0x82  EP 2 IN
+        bmAttributes            3
+          Transfer Type          Interrupt
+        wMaxPacketSize     0x0004  1x 4 bytes
+        bInterval               1
+    Interface Descriptor:
+      bInterfaceNumber        2
+      bAlternateSetting       0
+      bNumEndpoints           1
+      bInterfaceClass         3 Human Interface Device
+      bInterfaceSubClass      0 No Subclass
+      bInterfaceProtocol      0 None
+      iInterface              0 
+        HID Device Descriptor:
+          bcdHID             1.11
+          bCountryCode           0
+          bNumDescriptors        1
+          bDescriptorType       34 Report
+          wDescriptorLength     37
+         Report Descriptor: (length is 37)
+            05 01 09 06 a1 01 05 07 19 e0 29 e7 15 00 25 01 75 01 95 08 81 02 19 00 29 6f 15 00 25 01 75 01 95 70 81 02 c0
+            05 01            Usage Page 0x1
+            09 06            Usage 0x6
+            a1 01            Collection 0x1
+            05 07            Usage Page 0x7
+            19 e0            Usage Minimum 0xe0
+            29 e7            Usage Maximum 0xe7
+            15 00            Logical Minimum 0x0
+            25 01            Logical Maximum 0x1
+            75 01            Report Size 0x1
+            95 08            Report Count 0x8
+            81 02            Input 0x2
+            19 00            Usage Minimum 0x0
+            29 6f            Usage Maximum 0x6f
+            15 00            Logical Minimum 0x0
+            25 01            Logical Maximum 0x1
+            75 01            Report Size 0x1
+            95 70            Report Count 0x70
+            81 02            Input 0x2
+            c0               End Collection 0x0
+      Endpoint Descriptor:
+        bEndpointAddress     0x83  EP 3 IN
+        bmAttributes            3
+          Transfer Type          Interrupt
+        wMaxPacketSize     0x000f  1x 15 bytes
+        bInterval               1
