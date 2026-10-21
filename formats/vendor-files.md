@@ -14,8 +14,8 @@ CURRENTPROFILE=0        active profile, 0 to 2
 DEVICEPSTATS=1
 Mode=1                  0 Normal, 1 Game
 [LIGHTOPTION]
-LIGHTSTYLE=1            backlight style chosen in the Light Option page
-WASDLIGHT=1             per zone: 1 on, 0 off
+LIGHTSTYLE=1            0 Pulse, 1 to 4 level I to IV (Light Option page)
+WASDLIGHT=1             per zone: 1 on, 0 off (WASD, arrows, keypad, logo)
 DIRECTLIGHT=1
 NUMBERLIGHT=1
 Tt=0                    logo

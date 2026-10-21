@@ -2,7 +2,7 @@
 
 The Tt eSPORTS MEKA G-Unit keeps **three profiles in its on-board memory** and runs the active one by itself, with or without software on the host: up to 20 macro keys per profile (T1 to T12, plus up to eight standard keys turned into T13 to T20), key remaps, and the Instant Shift System, which reaches the macro keys of the other profiles through a modifier. A key switches between Normal and Game mode; three keys select the profile. The host writes each profile as four tables with USB vendor control requests. This page is the map of what is known; the requests and the formats have pages of their own.
 
-**Scope.** Everything here was seen on one MEKA G-Unit (non-Illuminated, Italian layout) with **firmware 1.35** ([`20`](../host-to-device/20/20.md): `01 35`; bcdDevice 1.35), driven by the Windows vendor software **v1.2**, unless it is marked *(inferred)*. The sources are the USB traffic between the vendor software and the keyboard, requests sent in tests, the behaviour of the keyboard, and the settings files of the vendor software. The lighting of the Illuminated edition could not be checked: this unit has none.
+**Scope.** Everything here was seen on one MEKA G-Unit (Italian layout; lit keys: the WASD group, the arrows and the logo) with **firmware 1.35** ([`20`](../host-to-device/20/20.md): `01 35`; bcdDevice 1.35), driven by the Windows vendor software **v1.2**, unless it is marked *(inferred)*. The sources are the USB traffic between the vendor software and the keyboard, requests sent in tests, the behaviour of the keyboard, and the settings files of the vendor software.
 
 **Contents:** [what the keyboard does on its own](#what-the-keyboard-does-on-its-own) · [USB functions](#usb-functions) · [transport](#transport) · [requests](#requests) · [sequences](#sequences) · [behaviour](#behaviour) · [implementation notes](#implementation-notes) · [open questions](#open-questions) · [formats](../formats/README.md)
 
@@ -15,9 +15,9 @@ The Tt eSPORTS MEKA G-Unit keeps **three profiles in its on-board memory** and r
 | A macro key that types one other key ("Single Key") | [macro index](../formats/macro-index.md) and [macro data](../formats/macro-data.md#single-key) |
 | Remap of a standard key to another key, in Game mode | [key matrix](../formats/matrix.md) |
 | A standard key used as macro key T13 to T20, in Game mode | [key matrix](../formats/matrix.md), plus the tables above |
-| Instant Shift: a left Ctrl, Shift or Alt reaches the T keys of the other two profiles | [`1a`](../host-to-device/1a/1a.md) |
+| Instant Shift: the **left** Ctrl, Shift or Alt reaches the T keys of the other two profiles | [`1a`](../host-to-device/1a/1a.md) |
 | The active profile and the work mode (Normal, Game) | [`14`](../host-to-device/14/14.md), [`02`](../host-to-device/02/02.md), or the keys |
-| Backlight of three zones and the logo (Illuminated edition) | [`31`](../host-to-device/31/31.md) *(not checked)* |
+| Backlight of the zones (WASD group, arrows, logo): 4 levels or pulse, each zone on or off; global, not per profile | [`31`](../host-to-device/31/31.md) |
 
 Not on the keyboard: **launching a program**. The keyboard stores only "launch key N" and reports it ([`82`](../device-to-host/82/82.md)); the host software starts the program.
 
@@ -52,7 +52,7 @@ There is no vendor HID interface and no OUT endpoint. The audio jacks of the key
 | [`04`](../host-to-device/04/04.md) | status: backlight level, zone levels, active profile |
 | [`05`](../host-to-device/05/05.md) | unknown, always `01 01` |
 | [`20`](../host-to-device/20/20.md) | firmware information and version |
-| [`31`](../host-to-device/31/31.md) | backlight of a zone (Illuminated edition) |
+| [`31`](../host-to-device/31/31.md) | backlight of a zone |
 
 From the keyboard: [notifications](../device-to-host/81/81.md) on the boot report, [launch keys](../device-to-host/82/82.md) on the consumer report.
 
@@ -140,12 +140,11 @@ At start the Windows software sends the saved backlight settings ([`31`](../host
 
 - Single Key (function `10`): what the two bytes after the usage mean, and whether the usage alone is enough.
 - Whether Game mode also blocks the right Windows key.
-- Right-hand modifiers as Instant Shift keys.
 - What the firmware does with the id field of the macro-key map, with the `87 00 01` after the end event, and with the 13 unidentified vendor codes of the matrix.
 - Macro data longer than what was seen (212 bytes): how it is split into transfers, how it is read back, and the largest profile the memory takes.
 - Whether the firmware needs the vendor's pauses between requests.
-- The backlight requests on an Illuminated unit, and whether the backlight setting survives a power cycle.
-- The other levels of the backlight setting ([`31`](../host-to-device/31/31.md)), the mute and media keys on the consumer report, and the unknown bytes of [`04`](../host-to-device/04/04.md), [`05`](../host-to-device/05/05.md) and [`20`](../host-to-device/20/20.md).
+- Whether the backlight setting survives a power cycle; what zone 2 (keypad) lights on other units.
+- The unknown bytes of [`04`](../host-to-device/04/04.md), [`05`](../host-to-device/05/05.md) and [`20`](../host-to-device/20/20.md).
 
 ## More
 
