@@ -11,7 +11,7 @@ Pages are named by `bRequest`. The setup fields are given as the 16-bit values o
 | `05` | in | 0 | 0 | 2 | always `01 01` | [05](05/05.md) |
 | `10` | out | 0 | profile | 105 | write the macro index | [10](10/10.md) |
 | `11` | in | 0 | profile | 105 | read the macro index | [11](11/11.md) |
-| `12` | out | 0 | profile | length | write the macro data | [12](12/12.md) |
+| `12` | out | offset | profile | up to 4096 | write a block of the macro data | [12](12/12.md) |
 | `13` | in | 0 | profile | length | read the macro data | [13](13/13.md) |
 | `14` | out | profile | 0 | none | select the active profile | [14](14/14.md) |
 | `15` | in | 0 | 0 | 1 | read the active profile | [15](15/15.md) |
@@ -29,13 +29,15 @@ No other request is documented. Do not try unknown requests: an unexpected read 
 
 Gaps seen between the requests of the Windows software:
 
-| After | Gap to the next request |
+| After | Gap to the next request (from setup to setup) |
 |---|---|
 | `18` | 0.5 to 1.1 s |
 | `10` | 0.5 s before `12`; 1.0 s before `16` when there is no `12` |
-| `12` (up to 212 bytes) | 1.0 s |
+| `12` | 1.0 s for up to 212 bytes; 6.0 s for 4096 bytes, 3.4 s for 1628 bytes |
 | `16` | 0.6 s |
 | `1a` | 0.06 s, then `14` |
 | `31` | 0.25 to 0.33 s between zones; 0.5 to 0.65 s before the `02` at start |
 
-Whether the firmware needs these pauses has not been tested; reads sent 4 ms apart were answered normally.
+Part of each gap is the keyboard itself: it completes a write only when it has stored the data. Time from setup to status stage, seen: `18` (160 bytes) 0.21 s, `16` (63 bytes) 0.17 s, `12` 1.54 s for 4096 bytes and 0.83 s for 1628 bytes, `10` and the requests without data a few milliseconds. Use timeouts of several seconds.
+
+Whether the firmware needs the extra pauses has not been tested; reads sent 4 ms apart were answered normally.

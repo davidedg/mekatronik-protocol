@@ -20,6 +20,7 @@ Function `20`. A list of events of **3 bytes** each, played in order, closed by 
 - **The end event carries the repeat count**: `86 00 01` for "once", `86 00 03` for "3 times". The other repeat modes (while held, until pressed again) are not here but in the [macro-key map](key-map.md), and leave `86 00 01`.
 - The Windows software writes `87 00 01` after the end event, inside the length of the key. The firmware does not seem to play it *(inferred)*.
 - The Windows software writes a delay after each event, also before the end event, except when its macro file has none; both forms play.
+- Right-hand modifiers work in macros (right Shift + 1 typed "!"). AltGr is recorded by Windows as left Ctrl + right Alt (`84 e0 01` `84 e6 01` ...), and the macro plays it back the same way.
 - The keys are played on the keyboard's NKRO interface in Game mode and on its boot interface in Normal mode ([`83`](../device-to-host/83/83.md), [`81`](../device-to-host/81/81.md)).
 
 ### Predefined actions
@@ -67,4 +68,4 @@ The Windows software writes 3 bytes, `uu fb 1f`; the meaning of the last two is 
 
 ## Limits
 
-- The offsets of the [macro index](macro-index.md) are 16-bit. The largest profile written in these tests had 212 bytes of data, in one transfer ([`12`](../host-to-device/12/12.md)); longer data has not been seen.
+- The offsets of the [macro index](macro-index.md) are 16-bit. The largest profile written in these tests had 5724 bytes of data (four macros of 1410 bytes and one of 84), sent in two blocks ([`12`](../host-to-device/12/12.md)); it played correctly.

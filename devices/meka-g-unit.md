@@ -65,7 +65,7 @@ What the Windows software sends when "Apply" is pressed, for the profile on scre
 ```
 > 40 18 0000 000P 00a0  <key matrix, 160 bytes>
 > 40 10 0000 000P 0069  <macro index, 105 bytes>
-> 40 12 0000 000P LLLL  <macro data, LLLL = total length>      only when the total is not 0
+> 40 12 OOOO 000P LLLL  <macro data, blocks of up to 4096>     only when the total is not 0; OOOO = offset of the block
 > 40 16 0000 000P 003f  <macro-key map, 63 bytes>
 > 40 1a hhll 0000 0000                                          Instant Shift keys (applies to the active profile)
 > 40 14 000P 0000 0000                                          select profile P
@@ -141,7 +141,7 @@ At start the Windows software sends the saved backlight settings ([`31`](../host
 - Single Key (function `10`): what the two bytes after the usage mean, and whether the usage alone is enough.
 - Whether Game mode also blocks the right Windows key.
 - What the firmware does with the id field of the macro-key map, with the `87 00 01` after the end event, and with the 13 unidentified vendor codes of the matrix.
-- Macro data longer than what was seen (212 bytes): how it is split into transfers, how it is read back, and the largest profile the memory takes.
+- Reading back macro data longer than one block, and the largest profile the memory takes (5724 bytes worked).
 - Whether the firmware needs the vendor's pauses between requests.
 - Whether the backlight setting survives a power cycle; what zone 2 (keypad) lights on other units.
 - The unknown bytes of [`04`](../host-to-device/04/04.md), [`05`](../host-to-device/05/05.md) and [`20`](../host-to-device/20/20.md).
