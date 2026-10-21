@@ -19,4 +19,9 @@ This work is licensed under a [Creative Commons Attribution-ShareAlike 4.0 Inter
 
 ## What we know so far
 
-Work in progress: nothing in this repo is confirmed by a capture yet.
+Seen on a MEKA G-Unit with firmware 1.35 and the Windows vendor software v1.2, from the USB traffic, the behaviour of the keyboard and the settings files of the vendor software. Start from [devices/meka-g-unit.md](devices/meka-g-unit.md).
+
+- The keyboard is configured with **USB vendor control requests to the device** (`bmRequestType` `40` / `c0`), one `bRequest` per command: [host-to-device/](host-to-device/README.md). No HID report is involved.
+- Each of the three profiles is four tables, written whole and partly readable: the [key matrix](formats/matrix.md), the [macro index](formats/macro-index.md), the [macro data](formats/macro-data.md) and the [macro-key map](formats/key-map.md). The Instant Shift keys, the active profile, the Normal/Game mode and the backlight have requests of their own.
+- The keyboard reports its own events (profile keys, mode key, backlight key, launch keys) as fake codes in its ordinary HID reports: [device-to-host/](device-to-host/81/81.md).
+- A profile that was never written is a trap: see [behaviour](devices/meka-g-unit.md#behaviour).
