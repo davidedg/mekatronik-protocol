@@ -15,7 +15,7 @@ Function `20`. A list of events of **3 bytes** each, played in order, closed by 
 | `87 hh ll` | delay of `hh ll` (big-endian) × **50 ms** |
 | `86 00 nn` | end of the macro; play it `nn` times in all |
 
-- **Delays are in units of 50 ms.** The vendor editor works in milliseconds and rounds down to a multiple of 50 before writing: 450 ms is `87 00 09`, 100 ms `87 00 02`, 1000 ms `87 00 14`, 130 ms becomes 100 ms, 23 ms becomes 0. A delay of 0 is written as `87 00 00`. Playback timing was checked: `87 00 03` and `87 00 26` gave 150 ms and 1.9 s between the reports.
+- **Delays are in units of 50 ms.** The vendor editor works in milliseconds and rounds down to a multiple of 50 before writing: 450 ms is `87 00 09`, 100 ms `87 00 02`, 1000 ms `87 00 14`, 130 ms becomes 100 ms, 23 ms becomes 0. A delay of 0 is written as `87 00 00`. **The editor caps a delay at 12750 ms** (255 × 50; 99999999 typed in the delay field became 12750), so it only ever writes `87 00 nn`; whether the firmware honours a high byte (delays above 12.75 s) has not been tried. Playback timing was checked: `87 00 03` and `87 00 26` gave 150 ms and 1.9 s between the reports.
 - Presses may overlap: 1↓ 3↓ 3↑ 1↑ is written as it is.
 - **The end event carries the repeat count**: `86 00 01` for "once", `86 00 03` for "3 times". The other repeat modes (while held, until pressed again) are not here but in the [macro-key map](key-map.md), and leave `86 00 01`.
 - The Windows software writes `87 00 01` after the end event, inside the length of the key. The firmware does not seem to play it *(inferred)*.

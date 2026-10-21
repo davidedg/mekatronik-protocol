@@ -74,7 +74,7 @@ Two bytes per item:
 | Bytes | Meaning | Device event |
 |---|---|---|
 | `kk 01` / `kk 00` | press / release of the key with vendor code `kk` | `84 uu 01` / `84 uu 00`, `uu` from the table below |
-| `ff nn` | delay of `nn` × 50 ms | `87 00 nn` |
+| `ff nn` | delay of `nn` × 50 ms, one byte: at most 12750 ms | `87 00 nn` |
 | `ee nn` | predefined action `nn` (`00` Page Up, `02` Copy), only in the library files | key events (expanded when the macro is assigned to a key) |
 
 When it writes a profile, the software adds the end event `86 00 nn` and a trailing `87 00 01` to each macro ([macro data](macro-data.md#macro)).
