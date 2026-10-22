@@ -31,7 +31,7 @@ The keyboard is a composite device with three HID interfaces ([descriptors](../l
 | 1 | `0x82` IN, 4 bytes | consumer control, 2 usages of 16 bits | media and volume keys; [launch keys](../device-to-host/82/82.md) |
 | 2 | `0x83` IN, 15 bytes | keyboard, modifiers and a bitmap of usages 0 to 6f | [typing in Game mode](../device-to-host/83/83.md) |
 
-There is no vendor HID interface and no OUT endpoint. The audio jacks of the keyboard are a separate USB device on the same cable (`04d9:2834` "HOLTEK USB PHONE"), which the vendor software does not use.
+There is no vendor HID interface and no OUT endpoint. **The keyboard has no USB serial number** (`iSerial` 0; strings 3 to 5 not answered); the serial printed on its label appears nowhere on USB, so two keyboards can only be told apart by the port they are plugged into. The audio jacks of the keyboard are a separate USB device on the same cable (`04d9:2834` "HOLTEK USB PHONE"), which the vendor software does not use.
 
 ## Transport
 
@@ -107,7 +107,8 @@ At start the Windows software sends the saved backlight settings ([`31`](../host
   An Instant Shift into such a profile, even by a remapped key, triggers the first problem.
 - **Instant Shift** follows the code a key produces, not the physical key, and the keyboard notifies the temporary profile ([`81`](../device-to-host/81/81.md)). The modifier reaches the host too, but is left out of the reports of the shifted key ([`1a`](../host-to-device/1a/1a.md)).
 - **Host changes are silent**: [`14`](../host-to-device/14/14.md) and [`02`](../host-to-device/02/02.md) produce no notification; the keys on the keyboard do. After `14` the keyboard sends empty key reports (all keys released).
-- **The work mode cannot be read**; the active profile can ([`15`](../host-to-device/15/15.md), [`04`](../host-to-device/04/04.md) byte 7).
+- **The work mode cannot be read**; the active profile can ([`15`](../host-to-device/15/15.md), [`04`](../host-to-device/04/04.md) byte 7). After a power cycle the keyboard was once seen in Normal mode ([`02`](../host-to-device/02/02.md)).
+- **Usages above `6f` cannot be typed in Game mode**, and one in a macro ends the macro there ([macro data](../formats/macro-data.md#macro)).
 
 ## Implementation notes
 
@@ -123,6 +124,7 @@ At start the Windows software sends the saved backlight settings ([`31`](../host
 - Write a profile whole, in the vendor order ([sequence](#write-a-profile)); build the macro index and the data together (offsets and total must match); skip `12` when the total is 0.
 - Select the profile with [`14`](../host-to-device/14/14.md) before [`1a`](../host-to-device/1a/1a.md), then select the profile that should be active.
 - Set the work mode explicitly ([`02`](../host-to-device/02/02.md)) if it matters: it cannot be read.
+- Keep macro and remap usages within `04` to `6f` and the modifiers `e0` to `e7`: the NKRO report of Game mode has no room for others.
 - Delays are multiples of 50 ms; repeat counts go in the end event, repeat modes in the macro-key map; a T13 to T20 key needs its code `d8`+k in the matrix **and** its entries in the index and the map.
 - Keep the repeat byte of every key in the map, also for a cleared key, at a defined value (the vendor software leaves stale values; `00` or `01` both work with function `00`).
 
@@ -138,12 +140,12 @@ At start the Windows software sends the saved backlight settings ([`31`](../host
 
 ## Open questions
 
-- Single Key (function `10`): what the two bytes after the usage mean, and whether the usage alone is enough.
+- Single Key (function `10`): whether the usage alone is enough (the two bytes after it vary and look meaningless).
 - Whether Game mode also blocks the right Windows key.
 - What the firmware does with the id field of the macro-key map, with the `87 00 01` after the end event, and with the 13 unidentified vendor codes of the matrix.
 - Reading back macro data longer than one block, and the largest profile the memory takes (5724 bytes worked).
 - Whether the firmware needs the vendor's pauses between requests.
-- Whether the backlight setting survives a power cycle; what zone 2 (keypad) lights on other units.
+- The work mode after power-on (Normal was seen once); whether the backlight setting survives a power cycle; what zone 2 (keypad) lights on other units.
 - The unknown bytes of [`04`](../host-to-device/04/04.md), [`05`](../host-to-device/05/05.md) and [`20`](../host-to-device/20/20.md).
 
 ## More

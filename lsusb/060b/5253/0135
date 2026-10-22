@@ -9,7 +9,7 @@ Device Descriptor:
   idVendor           0x060b
   idProduct          0x5253
   bcdDevice            1.35
-  iManufacturer           1 (not requested by the host)
+  iManufacturer           1 Thermaltake
   iProduct                2 Tt eSPORTS MEKA G UNIT gaming keyboard
   iSerial                 0 
   bNumConfigurations      1

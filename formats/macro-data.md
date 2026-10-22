@@ -22,6 +22,7 @@ Function `20`. A list of events of **3 bytes** each, played in order, closed by 
 - The Windows software writes a delay after each event, also before the end event, except when its macro file has none; both forms play.
 - Right-hand modifiers work in macros (right Shift + 1 typed "!"). AltGr is recorded by Windows as left Ctrl + right Alt (`84 e0 01` `84 e6 01` ...), and the macro plays it back the same way.
 - The keys are played on the keyboard's NKRO interface in Game mode and on its boot interface in Normal mode ([`83`](../device-to-host/83/83.md), [`81`](../device-to-host/81/81.md)).
+- **In Game mode a usage above `6f` ends the macro.** A macro holding `85` played its keys up to it, sent one empty NKRO report in its place and nothing after it; the same macro in Normal mode played to the end (`85` typed nothing there). Usage `66` was sent in both modes and typed nothing.
 
 ### Predefined actions
 
@@ -64,7 +65,7 @@ Function `10`: the macro key types one other key. The first byte is the HID usag
 T8 types X (Windows):  1b fb 1f
 ```
 
-The Windows software writes 3 bytes, `uu fb 1f`; the meaning of the last two is not known. The keyboard typed X with this form; the usage alone (1 byte) was not tried. The repeat byte of the key in the [macro-key map](key-map.md) stayed `00`.
+The Windows software writes 3 bytes, `uu` and two more that change from one write to the next for the same key (`fb 1f`, `d3 19`, `d6 19`, `dc 19`): they look like leftover memory, and only the first byte matters *(inferred)*. The keyboard typed X with each of them; the usage alone (1 byte) was not tried. A single key with no key chosen was written as `66 00 00`. The repeat byte of the key in the [macro-key map](key-map.md) stayed `00`.
 
 ## Limits
 
