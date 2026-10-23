@@ -130,7 +130,7 @@ At start the Windows software sends the saved backlight settings ([`31`](../host
 
 **Reading**
 
-- Read the macro index first; read the macro data only with its total length and only when the index is valid.
+- Read the macro index first; read the macro data only when the index is valid, with wValue 0 and wLength at most min(total, 4096) ([`13`](../host-to-device/13/13.md)).
 - Do not trust [`17`](../host-to-device/17/17.md) for profiles 2 and 3.
 
 **Host side**
@@ -143,7 +143,7 @@ At start the Windows software sends the saved backlight settings ([`31`](../host
 - Single Key (function `10`): whether the usage alone is enough (the two bytes after it vary and look meaningless).
 - Whether Game mode also blocks the right Windows key.
 - What the firmware does with the id field of the macro-key map, with the `87 00 01` after the end event, and with the 13 unidentified vendor codes of the matrix.
-- Reading back macro data longer than one block, and the largest profile the memory takes (5724 bytes worked).
+- The largest profile the memory takes (5724 bytes worked). (Macro data beyond the first 4096 bytes cannot be read back: [`13`](../host-to-device/13/13.md).)
 - Whether the firmware needs the vendor's pauses between requests.
 - The work mode after power-on (Normal was seen once); whether the backlight setting survives a power cycle; what zone 2 (keypad) lights on other units.
 - The unknown bytes of [`04`](../host-to-device/04/04.md), [`05`](../host-to-device/05/05.md) and [`20`](../host-to-device/20/20.md).
