@@ -51,4 +51,4 @@ A profile that was never written reads back as 105 bytes of `ff`. **Do not leave
 
 - Clearing a key ("Default" in the vendor software) writes its entry as `00 00 00 00 00` and drops its data; the [macro-key map](key-map.md) keeps whatever it had for the key, so the function in this table is what counts.
 - For T13 to T20 the entry only says what the key does; which standard key it is comes from the [matrix](matrix.md) (code `d8`+k).
-- The offsets are 16 bits, so the data of a profile is at most 64 KiB *(inferred)*; the memory is 64 KB for the three profiles according to the vendor, and how much of it a profile can use has not been tested.
+- The offsets are 16 bits, so the data of a profile is at most 64 KiB *(inferred)*; the memory is 64 KB for the three profiles according to the vendor. **16326 bytes of data per profile worked in the three profiles at once** ([macro data](macro-data.md#limits)); more was not tried.

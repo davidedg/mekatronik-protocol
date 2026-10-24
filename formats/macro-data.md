@@ -74,4 +74,4 @@ A single key also works on a standard key turned into T13 to T20 (the Windows so
 
 ## Limits
 
-- The offsets of the [macro index](macro-index.md) are 16-bit. The largest profile written in these tests had 5724 bytes of data (four macros of 1410 bytes and one of 84), sent in two blocks ([`12`](../host-to-device/12/12.md)); it played correctly.
+- The offsets of the [macro index](macro-index.md) are 16-bit. **The largest profile written in these tests had 16326 bytes of data**, sent in four blocks ([`12`](../host-to-device/12/12.md)); the three profiles held it at the same time. Each test profile had a short macro at the start of the data, a long one of `87 00 00` in the middle and a short one in the last 12 bytes; with the three profiles full, the first and the last macro of each played correctly, and the tables of the other profiles read back unchanged. More data per profile was not tried.
