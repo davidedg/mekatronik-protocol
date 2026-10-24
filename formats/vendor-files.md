@@ -29,11 +29,11 @@ One per profile.
 
 ```
 [ALTERNATE_PROFILE]     Instant Shift keys
-PREKEY=0                modifier for the next profile (p+1)
-NEXTKEY=1               modifier for the profile after it (p+2); 255 none
+PREKEY=0                modifier for the other profile with the lower number
+NEXTKEY=1               modifier for the other profile with the higher number; 255 none
 [BUTTONCONFIG0]         T1; BUTTONCONFIG0 to 19 = T1 to T20
 FunID=32                the device function in decimal: 0 none, 16 single key, 17 launch, 32 macro
-Mappinkey=255           for T13 to T20, the standard key used (12 for F12, 11 for F11); 255 none
+Mappinkey=255           for T13 to T20, the standard key used, numbered as the remap sections (12 F12, 11 F11); 255 none
 APP Path=C:\Windows\notepad.exe   (launch only)
 SingleKey=30            (single key only) the key to type, vendor code in decimal (30 = 0x1e = X); 0 none
 CurKey=0                (single key only)
@@ -42,7 +42,7 @@ AssKey=30               (single key only) same as SingleKey
 RepeatOption=1          1 once, 2 while held, 3 until pressed again, 4 multiple times
 RepeatTimes=3           count for option 4 (left over otherwise)
 MacroName=a
-Macro=1401FF031400FF262F01FF012F00...    items, see below, padded with 00
+Macro=1401FF031400FF262F01FF012F00...    items, see below, padded to 5440 items
 MacroLength=7           number of items
 [MAXTRIXSWAPKEY0]       single-key remaps; MAXTRIXSWAPKEY0 to 158, numbered by key, see below
 ISCHANGED=1
@@ -50,10 +50,11 @@ CURKEY=121              the key, vendor code in decimal (121 = 0x79 = Scroll Loc
 ASSKEY=136              what it produces (136 = 0x88 = left Ctrl)
 ```
 
-- Instant Shift codes seen: `0` Shift, `1` Ctrl. With Shift for the next profile and Ctrl for the one after, the keyboard received [`1a`](../host-to-device/1a/1a.md) with wValue `e0e1`.
+- Instant Shift codes seen: `0` Shift, `1` Ctrl, `2` Alt. Profile 1 with `PREKEY=0` and `NEXTKEY=1` (Shift for profile 2, Ctrl for profile 3): the keyboard received [`1a`](../host-to-device/1a/1a.md) with wValue `e0e1`; profile 2 with `PREKEY=2` and `NEXTKEY=0` (Alt for profile 1, Shift for profile 3): `e2e1`.
+- Items past `MacroLength` can be left over from a longer macro; only the first `MacroLength` count.
 - `RepeatOption` becomes, on the device: 1 and 4 → repeat `01` in the [macro-key map](key-map.md), with the count in the end event of the [macro](macro-data.md#macro); 2 → `02`; 3 → `03`.
 - Predefined actions are already expanded into key items in the profile file.
-- A single key with no key chosen (`SingleKey=0`) was written as `66 00 00`.
+- A single key with no key chosen (`SingleKey=0`) was written as `66 00 00`. A T13 to T20 key with a function but no key chosen (`Mappinkey=255`) still got its entry in the [macro index](macro-index.md), with no key in the matrix to play it.
 - **Remap sections** are numbered by the position of the key on the software's on-screen keyboard, a **US 104-key layout read row by row**: Esc 0, F1 to F12 1 to 12, Print Screen 13, Scroll Lock 14, Pause 15, `` ` `` 16, 1 to 0 17 to 26, ... Insert 30, ... Tab 37, Q 38, ... Space 94, ... keypad 0 102, keypad . 103 (seen: Pause, Insert, Tab, Q, Space, keypad 0, Scroll Lock). `CURKEY` alone identifies the key, so the number is not needed to read a file. The ISO key `<` (`64`) is not on that keyboard and cannot be remapped with the software. The software wrote each remap as the code of `ASSKEY` at the matrix position of `CURKEY` ([matrix](matrix.md)).
 
 ### `Macro Setting\<name>.ini`
@@ -88,7 +89,7 @@ The files number keys with codes of their own. The table below comes from macros
 
 **The software records the key Windows reports, as the key of a US keyboard**, not the physical key. On a US layout the two are the same. On another layout the keys with symbols are stored as the US key that gives the same Windows key, and the macro then types something else: on the Italian keyboard, pressing `\ ' ì è + ò à ù < , . -` gave a macro sending `31 2f 30 33 2e 35 34 38 66 85 37 2d` instead of `35 2d 2e 2f 30 33 34 32 64 36 37 38`, which typed `ùè+òì\à-.'` in Normal mode. More of the same:
 
-- Code `00` means no key: the ISO key `<`, the Menu key and keypad 5 with Num Lock off were stored as `00`, written as usage `66` (Power), which typed nothing.
+- Code `00` means no key: the ISO key `<`, the Menu key and keypad 5 with Num Lock off were stored as `00`, written as usage `66` (Power), which typed nothing on Windows (Linux reports it as the Power key).
 - The comma was stored as `3e`, written as `85` (the keypad comma of the international keyboards), which typed nothing.
 - Keypad Enter was stored as Enter (`56` → `28`); with Num Lock off the keypad keys were stored as the navigation keys (Home, arrows, ...).
 
