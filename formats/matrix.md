@@ -14,6 +14,8 @@
 | `d8` + k, k = 0 to 7 | the key is **macro key T13+k**: it runs entry 12+k of the [macro index](macro-index.md) and the [macro-key map](key-map.md) |
 | the default code | the key does what it is labelled |
 
+Remaps outside the usual codes, in Game mode: a key set to `00` typed nothing; a key set to `70` (F21, above the `6f` of the NKRO report) typed nothing either and sent empty NKRO reports on press and release. In Normal mode both keys typed their labels (the matrix is not used there).
+
 Seen: position `5a` (F12) set to `d8` became T13 and ran its macro in Game mode, and typed F12 in Normal mode; position `5b` (Scroll Lock) set to `e0` typed left Ctrl, and that left Ctrl also triggered the Instant Shift of the profile ([`1a`](../host-to-device/1a/1a.md)): the firmware works on the code a key produces, not on the physical key.
 
 The vendor software lets only the standard keys be changed, and only in its Game mode page; the T keys, the profile keys and the other dedicated keys keep their codes (`cc` to `d7`, `f1` to `f3`, and the codes marked as vendor codes below). What the firmware does with a dedicated key moved to another position, or with a vendor code that is not in the default table, is not known.

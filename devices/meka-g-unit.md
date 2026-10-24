@@ -140,9 +140,8 @@ At start the Windows software sends the saved backlight settings ([`31`](../host
 
 ## Open questions
 
-- Single Key (function `10`): whether the usage alone is enough (the two bytes after it vary and look meaningless).
 - Whether Game mode also blocks the right Windows key.
-- What the firmware does with the id field of the macro-key map, with the `87 00 01` after the end event, and with the 13 unidentified vendor codes of the matrix.
+- What the firmware does with the id field of the macro-key map, and with the 13 unidentified vendor codes of the matrix.
 - The largest profile the memory takes (5724 bytes worked). (The macro data of a profile with more than 4096 bytes cannot be read back safely: [`13`](../host-to-device/13/13.md).)
 - After a [`13`](../host-to-device/13/13.md) on a profile with more than 4096 bytes: which requests besides `15` still work, and whether a `13` on another profile hangs too.
 - Whether the firmware needs the vendor's pauses between requests.

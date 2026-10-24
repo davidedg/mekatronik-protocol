@@ -15,10 +15,11 @@ Function `20`. A list of events of **3 bytes** each, played in order, closed by 
 | `87 hh ll` | delay of `hh ll` (big-endian) × **50 ms** |
 | `86 00 nn` | end of the macro; play it `nn` times in all |
 
-- **Delays are in units of 50 ms.** The vendor editor works in milliseconds and rounds down to a multiple of 50 before writing: 450 ms is `87 00 09`, 100 ms `87 00 02`, 1000 ms `87 00 14`, 130 ms becomes 100 ms, 23 ms becomes 0. A delay of 0 is written as `87 00 00`. **The editor caps a delay at 12750 ms** (255 × 50; 99999999 typed in the delay field became 12750), so it only ever writes `87 00 nn`; whether the firmware honours a high byte (delays above 12.75 s) has not been tried. Playback timing was checked: `87 00 03` and `87 00 26` gave 150 ms and 1.9 s between the reports.
+- **Delays are in units of 50 ms.** The vendor editor works in milliseconds and rounds down to a multiple of 50 before writing: 450 ms is `87 00 09`, 100 ms `87 00 02`, 1000 ms `87 00 14`, 130 ms becomes 100 ms, 23 ms becomes 0. A delay of 0 is written as `87 00 00`. **The editor caps a delay at 12750 ms** (255 × 50; 99999999 typed in the delay field became 12750), so it only ever writes `87 00 nn`; **the firmware honours the high byte too**: `87 01 00` gave 12.804 s between the reports (256 × 50 ms), so a delay can reach 65535 × 50 ms. Playback timing was checked: `87 00 03` and `87 00 26` gave 150 ms and 1.9 s between the reports.
+- Two delays in a row are both played (`87 00 14 87 00 14`: 2.003 s), and a macro may start with a delay.
 - Presses may overlap: 1↓ 3↓ 3↑ 1↑ is written as it is.
 - **The end event carries the repeat count**: `86 00 01` for "once", `86 00 03` for "3 times". The other repeat modes (while held, until pressed again) are not here but in the [macro-key map](key-map.md), and leave `86 00 01`.
-- The Windows software writes `87 00 01` after the end event, inside the length of the key. The firmware does not seem to play it *(inferred)*.
+- The Windows software writes `87 00 01` after the end event, inside the length of the key. **The firmware plays it as a 50 ms pause**: the empty report that closes a macro came about 51 ms after its last key with it, 2 ms after without it. A macro without it plays normally.
 - The Windows software writes a delay after each event, also before the end event, except when its macro file has none; both forms play.
 - Right-hand modifiers work in macros (right Shift + 1 typed "!"). AltGr is recorded by Windows as left Ctrl + right Alt (`84 e0 01` `84 e6 01` ...), and the macro plays it back the same way.
 - The keys are played on the keyboard's NKRO interface in Game mode and on its boot interface in Normal mode ([`83`](../device-to-host/83/83.md), [`81`](../device-to-host/81/81.md)).
@@ -65,7 +66,9 @@ Function `10`: the macro key types one other key. The first byte is the HID usag
 T8 types X (Windows):  1b fb 1f
 ```
 
-The Windows software writes 3 bytes, `uu` and two more that change from one write to the next for the same key (`fb 1f`, `d3 19`, `d6 19`, `dc 19`): they look like leftover memory, and only the first byte matters *(inferred)*. The keyboard typed X with each of them; the usage alone (1 byte) was not tried. A single key with no key chosen was written as `66 00 00`. The repeat byte of the key in the [macro-key map](key-map.md) stayed `00`.
+The Windows software writes 3 bytes, `uu` and two more that change from one write to the next for the same key (`fb 1f`, `d3 19`, `d6 19`, `dc 19`): they look like leftover memory, and only the first byte matters *(inferred)*. The keyboard typed X with each of them, and **the usage alone works too** (`1d`, 1 byte, typed Z). A single key with no key chosen was written as `66 00 00`. The repeat byte of the key in the [macro-key map](key-map.md) stayed `00`.
+
+A single key also works on a standard key turned into T13 to T20 (the Windows software never does this: its "Single Key" on a standard key is a [remap](matrix.md)): F5 set to `d8` with entry 13 = `10`, `1b 00 00` typed X in Game mode, as long as the key was held.
 
 ## Limits
 

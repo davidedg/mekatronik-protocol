@@ -26,7 +26,7 @@ offset  size  field
 | `11` | launch a program on the host | 2 bytes ([macro data](macro-data.md#launch)) |
 | `10` | single key: the key types one other key | the HID usage, then 2 more bytes from Windows ([macro data](macro-data.md#single-key)) |
 
-The data of the keys lie one after the other, in entry order (T1 first, T13 to T20 last), with no gaps: the offset of a key is the sum of the lengths before it, and the total in bytes 3 to 4 is the sum of all lengths. The vendor software rebuilds the whole data block at every write, so the offsets move when a key before them changes.
+The data of the keys lie one after the other, in entry order (T1 first, T13 to T20 last), with no gaps: the offset of a key is the sum of the lengths before it, and the total in bytes 3 to 4 is the sum of all lengths. The vendor software rebuilds the whole data block at every write, so the offsets move when a key before them changes. The keyboard does not need this layout: **two entries with the same offset and length share their data** (T6 pointing at the macro of T4 played it).
 
 ## Examples
 
