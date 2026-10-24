@@ -38,6 +38,8 @@ Gaps seen between the requests of the Windows software:
 | `1a` | 0.06 s, then `14` |
 | `31` | 0.25 to 0.33 s between zones; 0.5 to 0.65 s before the `02` at start |
 
-Part of each gap is the keyboard itself: it completes a write only when it has stored the data. Time from setup to status stage, seen: `18` (160 bytes) 0.21 s, `16` (63 bytes) 0.17 s, `12` 1.54 s for 4096 bytes and 0.83 s for 1628 bytes, `10` and the requests without data a few milliseconds. Use timeouts of several seconds.
+Part of each gap is the keyboard itself: a write of a large block completes only when it has stored the data. Time from setup to status stage, seen in the Windows captures: `18` (160 bytes) 0.21 s, `16` (63 bytes) 0.17 s, `12` 1.54 s for 4096 bytes and 0.83 s for 1628 bytes, `10` and the requests without data a few milliseconds. Under Linux: `18`, `10`, `16` and a `12` of 212 bytes 2 to 3 ms, `12` 0.43 s for 1494 bytes, 1.5 s for 4096 bytes, 0.65 s for 1628 bytes. Use timeouts of several seconds.
 
-Whether the firmware needs the extra pauses has not been tested; reads sent 4 ms apart were answered normally.
+**After a table write the keyboard stays busy for a while, and refuses requests with a stall meanwhile** (tests under Linux): about 50 ms after `18`, `10` and `16`, 100 to 260 ms after a `12` block (212 to 4096 bytes). A `10` sent at once after `18` was refused; the keyboard answered again by itself some seconds later, the slot unchanged. A refused request did no harm. Waiting 60 ms after `18`, `10`, `16` and 150 ms after `12`, then sending [`15`](15/15.md) until it is answered, wrote every profile right: 212 bytes in 0.5 s, 5724 bytes in 2.9 s (the Windows pauses take 2.2 s and about 10 s).
+
+After `14` and `1a`, a `15` sent at once was not answered for 1 to 5 s; with a pause of 0.05 s, as the Windows software, the next request was always answered. Reads sent 4 ms apart were answered normally.
