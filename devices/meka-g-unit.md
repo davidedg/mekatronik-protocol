@@ -81,12 +81,12 @@ The "R" (reset) button of the Windows software writes the empty profile ([format
 
 ### Read a profile
 
-The vendor software reads nothing back. The reads work, with two traps:
+The vendor software reads nothing back. The reads work, with three traps:
 
 ```
 < c0 11 0000 000P 0069        macro index; all ff = never written: stop here
 < c0 19 0000 000P 00a0        key matrix
-< c0 13 0000 000P LLLL        macro data, only if the total LLLL (index bytes 3-4) is not 0
+< c0 13 0000 000P LLLL        macro data, only if the total LLLL (index bytes 3-4) is 1 to 4096
 < c0 17 0000 0001 003f        macro-key map: 40 bytes, valid for profile 1 only
 ```
 
@@ -102,7 +102,7 @@ At start the Windows software sends the saved backlight settings ([`31`](../host
 - **No indicator.** The keyboard has no light for the profile or the mode; only the [notifications](../device-to-host/81/81.md) (and [`15`](../host-to-device/15/15.md) for the profile) tell them.
 - **Profiles that were never written are dangerous.** Their macro index is all `ff` (as profiles 2 and 3 of the test unit came from the factory):
   - pressing a T key there plays the erased memory as a macro: about 26 000 empty NKRO reports at 1 ms (37 s), during which the other macros do not run;
-  - reading their macro data ([`13`](../host-to-device/13/13.md)) made the firmware hang until the keyboard was unplugged.
+  - reading their macro data ([`13`](../host-to-device/13/13.md)) answers old memory content, and the next `13` made the firmware hang until the keyboard was unplugged.
 
   An Instant Shift into such a profile, even by a remapped key, triggers the first problem.
 - **Instant Shift** follows the code a key produces, not the physical key, and the keyboard notifies the temporary profile ([`81`](../device-to-host/81/81.md)). The modifier reaches the host too, but is left out of the reports of the shifted key ([`1a`](../host-to-device/1a/1a.md)).
@@ -130,7 +130,7 @@ At start the Windows software sends the saved backlight settings ([`31`](../host
 
 **Reading**
 
-- Read the macro index first; read the macro data only when the index is valid, with wValue 0 and wLength at most min(total, 4096) ([`13`](../host-to-device/13/13.md)).
+- Read the macro index first; read the macro data only when the index is valid and its total is 1 to 4096, with wValue 0 and wLength = the total: after a `13` on a profile with more data, the next `13` hangs the firmware ([`13`](../host-to-device/13/13.md)).
 - Do not trust [`17`](../host-to-device/17/17.md) for profiles 2 and 3.
 
 **Host side**
@@ -143,7 +143,8 @@ At start the Windows software sends the saved backlight settings ([`31`](../host
 - Single Key (function `10`): whether the usage alone is enough (the two bytes after it vary and look meaningless).
 - Whether Game mode also blocks the right Windows key.
 - What the firmware does with the id field of the macro-key map, with the `87 00 01` after the end event, and with the 13 unidentified vendor codes of the matrix.
-- The largest profile the memory takes (5724 bytes worked). (Macro data beyond the first 4096 bytes cannot be read back: [`13`](../host-to-device/13/13.md).)
+- The largest profile the memory takes (5724 bytes worked). (The macro data of a profile with more than 4096 bytes cannot be read back safely: [`13`](../host-to-device/13/13.md).)
+- After a [`13`](../host-to-device/13/13.md) on a profile with more than 4096 bytes: which requests besides `15` still work, and whether a `13` on another profile hangs too.
 - Whether the firmware needs the vendor's pauses between requests.
 - The work mode after power-on (Normal was seen once); whether the backlight setting survives a power cycle; what zone 2 (keypad) lights on other units.
 - The unknown bytes of [`04`](../host-to-device/04/04.md), [`05`](../host-to-device/05/05.md) and [`20`](../host-to-device/20/20.md).

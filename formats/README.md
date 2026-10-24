@@ -32,7 +32,7 @@ The Windows vendor software stores keys in its files with a numbering of its own
 
 ## An empty profile
 
-The factory state of a profile that was never written is all `ff` in the macro index (seen on profiles 2 and 3 of the test unit). **A profile in this state is dangerous**: its T keys play the erased memory as a macro, and reading its macro data can hang the firmware ([behaviour](../devices/meka-g-unit.md#behaviour)). The vendor software's "Reset" writes this empty profile instead:
+The factory state of a profile that was never written is all `ff` in the macro index (seen on profiles 2 and 3 of the test unit). **A profile in this state is dangerous**: its T keys play the erased memory as a macro, and reading its macro data answers old memory content, after which the next read hangs the firmware ([behaviour](../devices/meka-g-unit.md#behaviour)). The vendor software's "Reset" writes this empty profile instead:
 
 ```
 18  the default matrix

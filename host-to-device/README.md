@@ -12,7 +12,7 @@ Pages are named by `bRequest`. The setup fields are given as the 16-bit values o
 | `10` | out | 0 | profile | 105 | write the macro index | [10](10/10.md) |
 | `11` | in | 0 | profile | 105 | read the macro index | [11](11/11.md) |
 | `12` | out | offset | profile | up to 4096 | write a block of the macro data | [12](12/12.md) |
-| `13` | in | 0 | profile | up to 4096 | read the macro data (first 4096 bytes only) | [13](13/13.md) |
+| `13` | in | 0 | profile | up to 4096 | read the macro data (profiles with at most 4096 bytes only) | [13](13/13.md) |
 | `14` | out | profile | 0 | none | select the active profile | [14](14/14.md) |
 | `15` | in | 0 | 0 | 1 | read the active profile | [15](15/15.md) |
 | `16` | out | 0 | profile | 63 | write the macro-key map | [16](16/16.md) |
