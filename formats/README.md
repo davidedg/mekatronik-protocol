@@ -8,7 +8,7 @@ Everything in these pages was seen on a MEKA G-Unit with firmware 1.35 (request 
 |---|---|---|---|---|
 | Key matrix | 160 | [`18`](../host-to-device/18/18.md) | [`19`](../host-to-device/19/19.md) | [matrix](matrix.md) |
 | Macro index | 105 | [`10`](../host-to-device/10/10.md) | [`11`](../host-to-device/11/11.md) | [macro index](macro-index.md) |
-| Macro data | 0 to 64 KiB *(inferred)* | [`12`](../host-to-device/12/12.md) | [`13`](../host-to-device/13/13.md) | [macro data](macro-data.md) |
+| Macro data | 0 to 16326 tried (the offsets allow 64 KiB) | [`12`](../host-to-device/12/12.md) | [`13`](../host-to-device/13/13.md) | [macro data](macro-data.md) |
 | Macro-key map | 63 | [`16`](../host-to-device/16/16.md) | [`17`](../host-to-device/17/17.md) (40 bytes, profile 1 only) | [macro-key map](key-map.md) |
 
 Not in a table: the Instant Shift keys of a profile ([`1a`](../host-to-device/1a/1a.md)), the work mode ([`02`](../host-to-device/02/02.md)), the backlight ([`31`](../host-to-device/31/31.md)).

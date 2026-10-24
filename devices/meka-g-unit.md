@@ -35,7 +35,7 @@ There is no vendor HID interface and no OUT endpoint. **The keyboard has no USB 
 
 ## Transport
 
-- All configuration uses **vendor control requests to the device** on endpoint 0 ([list](../host-to-device/README.md)): `bmRequestType` `40` to write, `c0` to read; `bRequest` is the command; wValue and wIndex carry small parameters, mostly the profile in wIndex (1 to 3); tables travel in the data stage. No HID report is involved; requests to the device need no interface claim, so on Linux libusb should be able to send them while the kernel keeps the HID interfaces *(inferred, to be tried)*.
+- All configuration uses **vendor control requests to the device** on endpoint 0 ([list](../host-to-device/README.md)): `bmRequestType` `40` to write, `c0` to read; `bRequest` is the command; wValue and wIndex carry small parameters, mostly the profile in wIndex (1 to 3); tables travel in the data stage. No HID report is involved; requests to the device need no interface claim, so on Linux libusb sends them while the kernel keeps the HID interfaces (tried).
 - The keyboard reports its own events (profile keys, mode key, backlight key, launch keys) as fake key codes in its ordinary HID reports ([`81`](../device-to-host/81/81.md), [`82`](../device-to-host/82/82.md)).
 
 ## Requests
@@ -107,7 +107,8 @@ At start the Windows software sends the saved backlight settings ([`31`](../host
   An Instant Shift into such a profile, even by a remapped key, triggers the first problem.
 - **Instant Shift** follows the code a key produces, not the physical key, and the keyboard notifies the temporary profile ([`81`](../device-to-host/81/81.md)). The modifier reaches the host too, but is left out of the reports of the shifted key ([`1a`](../host-to-device/1a/1a.md)).
 - **Host changes are silent**: [`14`](../host-to-device/14/14.md) and [`02`](../host-to-device/02/02.md) produce no notification; the keys on the keyboard do. After `14` the keyboard sends empty key reports (all keys released).
-- **The work mode cannot be read**; the active profile can ([`15`](../host-to-device/15/15.md), [`04`](../host-to-device/04/04.md) byte 7). After a power cycle the keyboard was once seen in Normal mode ([`02`](../host-to-device/02/02.md)).
+- **The work mode cannot be read**; the active profile can ([`15`](../host-to-device/15/15.md), [`04`](../host-to-device/04/04.md) byte 7). After a power cycle the keyboard was once seen in Normal mode, and after a USB reset by the host as well ([`02`](../host-to-device/02/02.md)).
+- **A hung keyboard comes back only when it loses power.** After the hangs of [`13`](../host-to-device/13/13.md) (and once of a [`12`](../host-to-device/12/12.md) sent again) it stalls every request and types nothing; a USB reset does not help.
 - **Usages above `6f` cannot be typed in Game mode**, and one in a macro ends the macro there ([macro data](../formats/macro-data.md#macro)).
 
 ## Implementation notes
@@ -116,7 +117,8 @@ At start the Windows software sends the saved backlight settings ([`31`](../host
 
 - Check [`20`](../host-to-device/20/20.md) first: bytes 0 to 5 `52 53 30 03 01 35` are the only firmware these pages describe.
 - Send only the requests and values on these pages. Unknown requests are not worth trying: an unexpected read hung this firmware.
-- Pace writes as the vendor software does ([timing](../host-to-device/README.md#timing)) until shorter delays are proven safe.
+- After each table write, wait briefly and then send [`15`](../host-to-device/15/15.md) until it is answered; after `14` and `1a`, pause 0.05 s. The long pauses of the vendor software are not needed ([timing](../host-to-device/README.md#timing)).
+- On a host where transfers fail at once with a protocol error, send a write again only after `15` is answered ([timing](../host-to-device/README.md#timing)); stop when it is not.
 
 **Writing**
 
@@ -144,7 +146,7 @@ At start the Windows software sends the saved backlight settings ([`31`](../host
 - What the firmware does with the id field of the macro-key map, and with the 13 unidentified vendor codes of the matrix.
 - The largest profile the memory takes: 16326 bytes of data worked, in each of the three profiles at once; more was not tried. (The macro data of a profile with more than 4096 bytes cannot be read back safely: [`13`](../host-to-device/13/13.md).)
 - After a [`13`](../host-to-device/13/13.md) on a profile with more than 4096 bytes: which requests besides `15` still work, and whether a `13` on another profile hangs too.
-- Whether the firmware needs the vendor's pauses between requests.
+- Why a [`12`](../host-to-device/12/12.md) block sent again after a failed transfer hung the keyboard once.
 - The work mode after power-on (Normal was seen once); whether the backlight setting survives a power cycle; what zone 2 (keypad) lights on other units.
 - The unknown bytes of [`04`](../host-to-device/04/04.md), [`05`](../host-to-device/05/05.md) and [`20`](../host-to-device/20/20.md).
 
