@@ -42,7 +42,7 @@ AssKey=30               (single key only) same as SingleKey
 RepeatOption=1          1 once, 2 while held, 3 until pressed again, 4 multiple times
 RepeatTimes=3           count for option 4 (left over otherwise)
 MacroName=a
-Macro=1401FF031400FF262F01FF012F00...    items, see below, padded to 5440 items
+Macro=1401FF031400FF262F01FF012F00...    items, see below; the line always holds 10881 bytes (5440 items and one byte)
 MacroLength=7           number of items
 [MAXTRIXSWAPKEY0]       single-key remaps; MAXTRIXSWAPKEY0 to 158, numbered by key, see below
 ISCHANGED=1
