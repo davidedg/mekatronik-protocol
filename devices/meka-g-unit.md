@@ -119,6 +119,7 @@ At start the Windows software sends the saved backlight settings ([`31`](../host
 - Check [`20`](../host-to-device/20/20.md) first: bytes 0 to 5 `52 53 30 03 01 35` are the only firmware these pages describe.
 - Send only the requests and values on these pages. Unknown requests are not worth trying: an unexpected read hung this firmware.
 - After each table write, wait briefly and then send [`15`](../host-to-device/15/15.md) until it is answered; after `14` and `1a`, pause 0.05 s. The long pauses of the vendor software are not needed ([timing](../host-to-device/README.md#timing)).
+- After each [`31`](../host-to-device/31/31.md), the last one included, wait about 70 ms before any request: one sent sooner may take seconds, and a `31` that does is not applied (check zones 0 to 2 with [`04`](../host-to-device/04/04.md)).
 - On a host where transfers fail at once with a protocol error, send a write again only after `15` is answered ([timing](../host-to-device/README.md#timing)); stop when it is not.
 
 **Writing**
