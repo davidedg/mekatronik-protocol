@@ -2,7 +2,7 @@
 
 The Tt eSPORTS MEKA G-Unit keeps **three profiles in its on-board memory** and runs the active one by itself, with or without software on the host: up to 20 macro keys per profile (T1 to T12, plus up to eight standard keys turned into T13 to T20), key remaps, and the Instant Shift System, which reaches the macro keys of the other profiles through a modifier. A key switches between Normal and Game mode; three keys select the profile. The host writes each profile as four tables with USB vendor control requests. This page is the map of what is known; the requests and the formats have pages of their own.
 
-**Scope.** Everything here was seen on one MEKA G-Unit (Italian layout; lit keys: the WASD group, the arrows and the logo) with **firmware 1.35** ([`20`](../host-to-device/20/20.md): `01 35`; bcdDevice 1.35), driven by the Windows vendor software **v1.2**, unless it is marked *(inferred)*. The sources are the USB traffic between the vendor software and the keyboard, requests sent in tests, the behaviour of the keyboard, and the settings files of the vendor software.
+**Scope.** Everything here was seen on one MEKA G-Unit (Italian layout; lit keys: the WASD group, the arrows, keypad 8/4/5/6 and the logo) with **firmware 1.35** ([`20`](../host-to-device/20/20.md): `01 35`; bcdDevice 1.35), driven by the Windows vendor software **v1.2**, unless it is marked *(inferred)*. The sources are the USB traffic between the vendor software and the keyboard, requests sent in tests, the behaviour of the keyboard, and the settings files of the vendor software.
 
 **Contents:** [what the keyboard does on its own](#what-the-keyboard-does-on-its-own) · [USB functions](#usb-functions) · [transport](#transport) · [requests](#requests) · [sequences](#sequences) · [behaviour](#behaviour) · [implementation notes](#implementation-notes) · [open questions](#open-questions) · [formats](../formats/README.md)
 
@@ -17,7 +17,7 @@ The Tt eSPORTS MEKA G-Unit keeps **three profiles in its on-board memory** and r
 | A standard key used as macro key T13 to T20, in Game mode | [key matrix](../formats/matrix.md), plus the tables above |
 | Instant Shift: the **left** Ctrl, Shift or Alt reaches the T keys of the other two profiles | [`1a`](../host-to-device/1a/1a.md) |
 | The active profile and the work mode (Normal, Game) | [`14`](../host-to-device/14/14.md), [`02`](../host-to-device/02/02.md), or the keys |
-| Backlight of the zones (WASD group, arrows, logo): 4 levels or pulse, each zone on or off; global, not per profile | [`31`](../host-to-device/31/31.md) |
+| Backlight of the zones (WASD group, arrows, keypad 8/4/5/6): each zone off, level 0 (dark) to 3, or pulse; the logo pulsing or off. Global, not per profile, and **not kept at power-on** | [`31`](../host-to-device/31/31.md) |
 
 Not on the keyboard: **launching a program**. The keyboard stores only "launch key N" and reports it ([`82`](../device-to-host/82/82.md)); the host software starts the program.
 
@@ -49,7 +49,7 @@ There is no vendor HID interface and no OUT endpoint. **The keyboard has no USB 
 | [`1a`](../host-to-device/1a/1a.md) | Instant Shift keys of the active profile |
 | [`14`](../host-to-device/14/14.md) / [`15`](../host-to-device/15/15.md) | select / read the active profile |
 | [`02`](../host-to-device/02/02.md) | work mode: Normal or Game (not readable) |
-| [`04`](../host-to-device/04/04.md) | status: backlight level, zone levels, active profile |
+| [`04`](../host-to-device/04/04.md) | status: backlight level, zone levels (not the logo; stale after power-on), active profile |
 | [`05`](../host-to-device/05/05.md) | unknown, always `01 01` |
 | [`20`](../host-to-device/20/20.md) | firmware information and version |
 | [`31`](../host-to-device/31/31.md) | backlight of a zone |
@@ -109,6 +109,7 @@ At start the Windows software sends the saved backlight settings ([`31`](../host
 - **Host changes are silent**: [`14`](../host-to-device/14/14.md) and [`02`](../host-to-device/02/02.md) produce no notification; the keys on the keyboard do. After `14` the keyboard sends empty key reports (all keys released).
 - **The work mode cannot be read**; the active profile can ([`15`](../host-to-device/15/15.md), [`04`](../host-to-device/04/04.md) byte 7). After a power cycle the keyboard was once seen in Normal mode, and after a USB reset by the host as well ([`02`](../host-to-device/02/02.md)).
 - **A hung keyboard comes back only when it loses power.** After the hangs of [`13`](../host-to-device/13/13.md) (and once of a [`12`](../host-to-device/12/12.md) sent again) it stalls every request and types nothing; a USB reset does not help.
+- **The backlight is not kept at power-on**: the keyboard lights zones 0 to 2 at level 3 and the logo in pulse, whatever was set before; it is global, not per profile ([`31`](../host-to-device/31/31.md)). [`04`](../host-to-device/04/04.md) then still reports the old levels until the first [`14`](../host-to-device/14/14.md).
 - **Usages above `6f` cannot be typed in Game mode**, and one in a macro ends the macro there ([macro data](../formats/macro-data.md#macro)).
 
 ## Implementation notes
@@ -137,6 +138,7 @@ At start the Windows software sends the saved backlight settings ([`31`](../host
 
 **Host side**
 
+- The backlight has to be sent again ([`31`](../host-to-device/31/31.md), all four zones) each time the keyboard appears: it is not kept at power-on, and [`04`](../host-to-device/04/04.md) cannot tell the shown state (not the logo, not off from level 0, stale after power-on). Keep it on the host.
 - Launch keys need a host program that listens to the consumer report ([`82`](../device-to-host/82/82.md)) and starts the program.
 - Without the vendor software, the notification codes reach the operating system as key codes; on Linux some of them become media and power keys ([`81`](../device-to-host/81/81.md)). A host program should catch them through hidraw and neutralise them.
 
@@ -147,7 +149,7 @@ At start the Windows software sends the saved backlight settings ([`31`](../host
 - The largest profile the memory takes: 16326 bytes of data worked, in each of the three profiles at once; more was not tried. (The macro data of a profile with more than 4096 bytes cannot be read back safely: [`13`](../host-to-device/13/13.md).)
 - After a [`13`](../host-to-device/13/13.md) on a profile with more than 4096 bytes: which requests besides `15` still work, and whether a `13` on another profile hangs too.
 - Why a [`12`](../host-to-device/12/12.md) block sent again after a failed transfer hung the keyboard once.
-- The work mode after power-on (Normal was seen once); whether the backlight setting survives a power cycle; what zone 2 (keypad) lights on other units.
+- The work mode after power-on (Normal was seen once); which keys the zones light on other units.
 - The unknown bytes of [`04`](../host-to-device/04/04.md), [`05`](../host-to-device/05/05.md) and [`20`](../host-to-device/20/20.md).
 
 ## More

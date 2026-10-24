@@ -7,7 +7,7 @@ Pages are named by `bRequest`. The setup fields are given as the 16-bit values o
 | bRequest | Dir | wValue | wIndex | Data | Meaning | |
 |---|---|---|---|---|---|---|
 | `02` | out | mode | 0 | none | work mode: Normal or Game | [02](02/02.md) |
-| `04` | in | 0 | 0 | 8 | status: backlight level, active profile | [04](04/04.md) |
+| `04` | in | 0 | 0 | 8 | status: backlight level, zone levels, active profile | [04](04/04.md) |
 | `05` | in | 0 | 0 | 2 | always `01 01` | [05](05/05.md) |
 | `10` | out | 0 | profile | 105 | write the macro index | [10](10/10.md) |
 | `11` | in | 0 | profile | 105 | read the macro index | [11](11/11.md) |
