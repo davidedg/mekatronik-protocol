@@ -20,6 +20,7 @@ Function `20`. A list of events of **3 bytes** each, played in order, closed by 
 - Presses may overlap: 1↓ 3↓ 3↑ 1↑ is written as it is.
 - **The end event carries the repeat count**: `86 00 01` for "once", `86 00 03` for "3 times". The other repeat modes (while held, until pressed again) are not here but in the [macro-key map](key-map.md), and leave `86 00 01`.
 - The Windows software writes `87 00 01` after the end event, inside the length of the key. **The firmware plays it as a 50 ms pause**: the empty report that closes a macro came about 51 ms after its last key with it, 2 ms after without it. A macro without it plays normally.
+- When the macro repeats, the pause falls where the firmware goes back to the start: with "3 times" it played once, after the last repetition (repetitions 104 ms apart for a key, 100 ms and the end event, with or without it); while the key is held and in toggle mode it played at every repetition (154 ms apart with it, 104 ms without). So in these two modes it is the pause between two runs of the macro.
 - The Windows software writes a delay after each event, also before the end event, except when its macro file has none; both forms play.
 - Right-hand modifiers work in macros (right Shift + 1 typed "!"). AltGr is recorded by Windows as left Ctrl + right Alt (`84 e0 01` `84 e6 01` ...), and the macro plays it back the same way.
 - The keys are played on the keyboard's NKRO interface in Game mode and on its boot interface in Normal mode ([`83`](../device-to-host/83/83.md), [`81`](../device-to-host/81/81.md)).
