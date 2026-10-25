@@ -2,7 +2,7 @@
 
 The Tt eSPORTS MEKA G-Unit keeps **three profiles in its on-board memory** and runs the active one by itself, with or without software on the host: up to 20 macro keys per profile (T1 to T12, plus up to eight standard keys turned into T13 to T20), key remaps, and the Instant Shift System, which reaches the macro keys of the other profiles through a modifier. A key switches between Normal and Game mode; three keys select the profile. The host writes each profile as four tables with USB vendor control requests. This page is the map of what is known; the requests and the formats have pages of their own.
 
-**Scope.** Everything here was seen on one MEKA G-Unit (Italian layout; lit keys: the WASD group, the arrows, keypad 8/4/5/6 and the logo) with **firmware 1.35** ([`20`](../host-to-device/20/20.md): `01 35`; bcdDevice 1.35), driven by the Windows vendor software **v1.2**, unless it is marked *(inferred)*. The sources are the USB traffic between the vendor software and the keyboard, requests sent in tests, the behaviour of the keyboard, and the settings files of the vendor software.
+**Scope.** Everything here was seen on one MEKA G-Unit (Italian layout; lit keys: the WASD group, the arrows, keypad 8/4/2/6 and the logo) with **firmware 1.35** ([`20`](../host-to-device/20/20.md): `01 35`; bcdDevice 1.35), driven by the Windows vendor software **v1.2**, unless it is marked *(inferred)*. The sources are the USB traffic between the vendor software and the keyboard, requests sent in tests, the behaviour of the keyboard, and the settings files of the vendor software.
 
 **Contents:** [what the keyboard does on its own](#what-the-keyboard-does-on-its-own) · [USB functions](#usb-functions) · [transport](#transport) · [requests](#requests) · [sequences](#sequences) · [behaviour](#behaviour) · [implementation notes](#implementation-notes) · [open questions](#open-questions) · [formats](../formats/README.md)
 
@@ -17,7 +17,7 @@ The Tt eSPORTS MEKA G-Unit keeps **three profiles in its on-board memory** and r
 | A standard key used as macro key T13 to T20, in Game mode | [key matrix](../formats/matrix.md), plus the tables above |
 | Instant Shift: the **left** Ctrl, Shift or Alt reaches the T keys of the other two profiles | [`1a`](../host-to-device/1a/1a.md) |
 | The active profile and the work mode (Normal, Game) | [`14`](../host-to-device/14/14.md), [`02`](../host-to-device/02/02.md), or the keys |
-| Backlight of the zones (WASD group, arrows, keypad 8/4/5/6): each zone off, level 0 (dark) to 3, or pulse; the logo pulsing or off. Global, not per profile, and **not kept at power-on** | [`31`](../host-to-device/31/31.md) |
+| Backlight of the zones (WASD group, arrows, keypad 8/4/2/6): each zone off, level 0 (dark) to 3, or pulse; the logo pulsing or off. Global, not per profile, and **not kept at power-on** | [`31`](../host-to-device/31/31.md) |
 
 Not on the keyboard: **launching a program**. The keyboard stores only "launch key N" and reports it ([`82`](../device-to-host/82/82.md)); the host software starts the program.
 
