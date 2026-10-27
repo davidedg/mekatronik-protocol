@@ -5,7 +5,10 @@ Documentation of the USB protocol that the vendor software uses to program the
 key remaps, the three profiles, Normal/Game mode, the Instant Shift System and the backlight.
 
 The aim is to make the on-board features usable without the vendor software, which supports
-Windows up to 8 only. The layout follows [davidedg/corsair-protocol](https://github.com/davidedg/corsair-protocol):
+Windows up to 8 only. [davidedg/mekatronik](https://github.com/davidedg/mekatronik) is a Linux tool
+built on these pages.
+
+The layout follows [davidedg/corsair-protocol](https://github.com/davidedg/corsair-protocol):
 
 - [`devices/`](devices/README.md): the overall picture of a device, with links to the pages of its commands and formats.
 - `host-to-device/`, `device-to-host/`: one page per command or report, in folders by bytes.

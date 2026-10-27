@@ -128,7 +128,7 @@ At start the Windows software sends the saved backlight settings ([`31`](../host
 - Write a profile whole, in the vendor order ([sequence](#write-a-profile)); build the macro index and the data together (offsets and total must match); skip `12` when the total is 0.
 - Select the profile with [`14`](../host-to-device/14/14.md) before [`1a`](../host-to-device/1a/1a.md), then select the profile that should be active.
 - Set the work mode explicitly ([`02`](../host-to-device/02/02.md)) if it matters: it cannot be read.
-- Keep macro and remap usages within `04` to `6f` and the modifiers `e0` to `e7`: the NKRO report of Game mode has no room for others.
+- Keep macro and remap usages within `04` to `6f` and the modifiers `e0` to `e7`: the NKRO report of Game mode has no room for others. The range includes F13 to F20 (`68` to `6f`), which the keyboard does not have: F13 worked as a single key and as a remap.
 - Delays are multiples of 50 ms; repeat counts go in the end event, repeat modes in the macro-key map; a T13 to T20 key needs its code `d8`+k in the matrix **and** its entries in the index and the map.
 - Keep the repeat byte of every key in the map, also for a cleared key, at a defined value (the vendor software leaves stale values; `00` or `01` both work with function `00`).
 
@@ -146,7 +146,7 @@ At start the Windows software sends the saved backlight settings ([`31`](../host
 ## Open questions
 
 - Whether Game mode also blocks the right Windows key.
-- What the firmware does with the id field of the macro-key map, and with the 13 unidentified vendor codes of the matrix.
+- What the firmware does with the id field of the macro-key map, and with the 13 unidentified firmware codes of the matrix.
 - The largest profile the memory takes: 16326 bytes of data worked, in each of the three profiles at once; more was not tried. (The macro data of a profile with more than 4096 bytes cannot be read back safely: [`13`](../host-to-device/13/13.md).)
 - After a [`13`](../host-to-device/13/13.md) on a profile with more than 4096 bytes: which requests besides `15` still work, and whether a `13` on another profile hangs too.
 - Why a [`12`](../host-to-device/12/12.md) block sent again after a failed transfer hung the keyboard once.

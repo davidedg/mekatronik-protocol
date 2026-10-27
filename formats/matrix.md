@@ -16,9 +16,11 @@
 
 Remaps outside the usual codes, in Game mode: a key set to `00` typed nothing; a key set to `70` (F21, above the `6f` of the NKRO report) typed nothing either and sent empty NKRO reports on press and release. In Normal mode both keys typed their labels (the matrix is not used there).
 
+Keys the keyboard does not have work as remaps: Caps Lock (position `6f`) set to `68` (F13) typed F13 in Game mode, and Caps Lock in Normal mode. F14 to F20 (`69` to `6f`) are in the same range *(inferred)*.
+
 Seen: position `5a` (F12) set to `d8` became T13 and ran its macro in Game mode, and typed F12 in Normal mode; position `5b` (Scroll Lock) set to `e0` typed left Ctrl, and that left Ctrl also triggered the Instant Shift of the profile ([`1a`](../host-to-device/1a/1a.md)): the firmware works on the code a key produces, not on the physical key.
 
-The vendor software lets only the standard keys be changed, and only in its Game mode page; the T keys, the profile keys and the other dedicated keys keep their codes (`cc` to `d7`, `f1` to `f3`, and the codes marked as vendor codes below). What the firmware does with a dedicated key moved to another position, or with a vendor code that is not in the default table, is not known.
+The vendor software lets only the standard keys be changed, and only in its Game mode page; the T keys, the profile keys and the other dedicated keys keep their codes (`cc` to `d7`, `f1` to `f3`, and the codes marked as firmware codes below). What the firmware does with a dedicated key moved to another position, or with a firmware code that is not in the default table, is not known.
 
 To turn a key back to normal, write its default code again: the Windows software sends the whole default table with only the changed positions replaced.
 
@@ -30,57 +32,57 @@ The key names are those of the HID usages; the Italian legend of the test unit i
 |---|---|---|
 | `00` | `1d` | Z |
 | `01` | `1e` | 1 |
-| `02` | `cc` | **T1** (vendor code) |
-| `03` | `b0` | vendor code, key not identified |
+| `02` | `cc` | **T1** (firmware code) |
+| `03` | `b0` | firmware code, key not identified |
 | `04` | `e6` | Right Alt (AltGr) |
-| `05` | `b3` | vendor code, key not identified |
-| `06` | `cd` | **T2** (vendor code) |
-| `07` | `ed` | vendor code, key not identified |
+| `05` | `b3` | firmware code, key not identified |
+| `06` | `cd` | **T2** (firmware code) |
+| `07` | `ed` | firmware code, key not identified |
 | `08` | `06` | C |
 | `09` | `20` | 3 |
-| `0a` | `ce` | **T3** (vendor code) |
-| `0b` | `b4` | vendor code, key not identified |
-| `0c` | `b5` | vendor code, key not identified |
-| `0d` | `cf` | **T4** (vendor code) |
+| `0a` | `ce` | **T3** (firmware code) |
+| `0b` | `b4` | firmware code, key not identified |
+| `0c` | `b5` | firmware code, key not identified |
+| `0d` | `cf` | **T4** (firmware code) |
 | `0e` | `e4` | Right Ctrl |
-| `0f` | `d0` | **T5** (vendor code) |
+| `0f` | `d0` | **T5** (firmware code) |
 | `10` | `09` | F |
 | `11` | `3a` | F1 |
 | `12` | `3e` | F5 |
-| `13` | `d1` | **T6** (vendor code) |
+| `13` | `d1` | **T6** (firmware code) |
 | `14` | `e2` | Left Alt |
-| `15` | `d2` | **T7** (vendor code) |
-| `16` | `d3` | **T8** (vendor code) |
-| `17` | `d4` | **T9** (vendor code) |
+| `15` | `d2` | **T7** (firmware code) |
+| `16` | `d3` | **T8** (firmware code) |
+| `17` | `d4` | **T9** (firmware code) |
 | `18` | `28` | Enter |
 | `19` | `3b` | F2 |
 | `1a` | `3f` | F6 |
-| `1b` | `d5` | **T10** (vendor code) |
-| `1c` | `d6` | **T11** (vendor code) |
+| `1b` | `d5` | **T10** (firmware code) |
+| `1c` | `d6` | **T11** (firmware code) |
 | `1d` | `e1` | Left Shift |
-| `1e` | `d7` | **T12** (vendor code) |
+| `1e` | `d7` | **T12** (firmware code) |
 | `1f` | `00` | (none) |
 | `20` | `29` | Esc |
 | `21` | `0e` | K |
 | `22` | `13` | P |
-| `23` | `f1` | **profile key 1** (vendor code) |
-| `24` | `f2` | **profile key 2** (vendor code) |
-| `25` | `f3` | **profile key 3** (vendor code) |
+| `23` | `f1` | **profile key 1** (firmware code) |
+| `24` | `f2` | **profile key 2** (firmware code) |
+| `25` | `f3` | **profile key 3** (firmware code) |
 | `26` | `e0` | Left Ctrl |
-| `27` | `b7` | vendor code, key not identified |
+| `27` | `b7` | firmware code, key not identified |
 | `28` | `2c` | Space |
 | `29` | `21` | 4 |
 | `2a` | `87` | International1 (JIS Ro) |
 | `2b` | `e3` | Left GUI (Windows) |
-| `2c` | `b4` | vendor code, key not identified |
+| `2c` | `b4` | firmware code, key not identified |
 | `2d` | `8b` | International5 (Muhenkan) |
 | `2e` | `8a` | International4 (Henkan) |
 | `2f` | `88` | International2 (Katakana) |
 | `30` | `04` | A |
 | `31` | `3d` | F4 |
 | `32` | `12` | O |
-| `33` | `c6` | vendor code, key not identified |
-| `34` | `c9` | vendor code, key not identified |
+| `33` | `c6` | firmware code, key not identified |
+| `34` | `c9` | firmware code, key not identified |
 | `35` | `91` | LANG2 |
 | `36` | `90` | LANG1 |
 | `37` | `e7` | Right GUI (Windows) |
@@ -166,12 +168,12 @@ The key names are those of the HID usages; the Italian legend of the test unit i
 | `87` | `10` | M |
 | `88` | `1b` | X |
 | `89` | `1f` | 2 |
-| `8a` | `ec` | vendor code, key not identified |
-| `8b` | `b1` | vendor code, key not identified |
-| `8c` | `eb` | vendor code, key not identified |
+| `8a` | `ec` | firmware code, key not identified |
+| `8b` | `b1` | firmware code, key not identified |
+| `8c` | `eb` | firmware code, key not identified |
 | `8d` | `e5` | Right Shift |
-| `8e` | `b6` | vendor code, key not identified |
-| `8f` | `b2` | vendor code, key not identified |
+| `8e` | `b6` | firmware code, key not identified |
+| `8f` | `b2` | firmware code, key not identified |
 | `90` to `9f` | `00` | (not used) |
 
-The thirteen vendor codes that are not identified (`b0` to `b7`, `c6`, `c9`, `eb`, `ec`, `ed`; `b4` is in two positions) belong to the other dedicated keys: Normal/Game switch, backlight, mute, volume up and down, and the four media keys *(inferred)*. Those keys are not remappable in the vendor software, and they reach the host as [notifications](../device-to-host/81/81.md) or [consumer reports](../device-to-host/82/82.md).
+The thirteen firmware codes that are not identified (`b0` to `b7`, `c6`, `c9`, `eb`, `ec`, `ed`; `b4` is in two positions) belong to the other dedicated keys: Normal/Game switch, backlight, mute, volume up and down, and the four media keys *(inferred)*. Those keys are not remappable in the vendor software, and they reach the host as [notifications](../device-to-host/81/81.md) or [consumer reports](../device-to-host/82/82.md).

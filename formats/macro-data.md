@@ -25,7 +25,7 @@ Function `20`. A list of events of **3 bytes** each, played in order, closed by 
 - Right-hand modifiers work in macros (right Shift + 1 typed "!"). AltGr is recorded by Windows as left Ctrl + right Alt (`84 e0 01` `84 e6 01` ...), and the macro plays it back the same way. On Linux that is Ctrl + AltGr, a shortcut: such a macro typed no € there (Italian layout); right Alt alone is AltGr.
 - The keys are played on the keyboard's NKRO interface in Game mode and on its boot interface in Normal mode ([`83`](../device-to-host/83/83.md), [`81`](../device-to-host/81/81.md)).
 - **A key pressed while a macro plays stops it**, in both modes (seen with a letter, Enter, right Ctrl, and left Shift, an [Instant Shift](../host-to-device/1a/1a.md) key of that profile): the key is reported as usual and the macro does not go on. At that moment the keyboard sends an empty report on the interface the macro does not use (the boot interface in Game mode, the NKRO interface in Normal mode); the next report on the macro's interface gives the new state of the keys. This holds in every [repeat mode](key-map.md): a macro repeating while its key is held stopped at the key and did not start again although its key was still held; a toggled macro stopped too, without its key being pressed again. **A macro key pressed while a macro plays stops it and starts its own macro**; the same key starts it again from the beginning (seen with macros that play once).
-- **In Game mode a usage above `6f` ends the macro.** A macro holding `85` played its keys up to it, sent one empty NKRO report in its place and nothing after it; the same macro in Normal mode played to the end (`85` typed nothing there). Usage `66` was sent in both modes and typed nothing.
+- **In Game mode a usage above `6f` ends the macro.** A macro holding `85` played its keys up to it, sent one empty NKRO report in its place and nothing after it; the same macro in Normal mode played to the end (`85` typed nothing there). Usage `66` (Power) was sent in both modes and typed nothing on Windows.
 
 ### Predefined actions
 
@@ -68,7 +68,7 @@ Function `10`: the macro key types one other key. The first byte is the HID usag
 T8 types X (Windows):  1b fb 1f
 ```
 
-The Windows software writes 3 bytes, `uu` and two more that change from one write to the next for the same key (`fb 1f`, `d3 19`, `d6 19`, `dc 19`): they look like leftover memory, and only the first byte matters *(inferred)*. The keyboard typed X with each of them, and **the usage alone works too** (`1d`, 1 byte, typed Z). A single key with no key chosen was written as `66 00 00`. The repeat byte of the key in the [macro-key map](key-map.md) stayed `00`.
+The Windows software writes 3 bytes, `uu` and two more that change from one write to the next for the same key (`fb 1f`, `d3 19`, `d6 19`, `dc 19`): they look like leftover memory, and only the first byte matters *(inferred)*. The keyboard typed X with each of them, and **the usage alone works too** (`1d`, 1 byte, typed Z). A single key with no key chosen was written as `66 00 00`. A key the keyboard does not have works too: T5 with `68` (F13) typed F13 in Normal and in Game mode. The repeat byte of the key in the [macro-key map](key-map.md) stayed `00`.
 
 A single key also works on a standard key turned into T13 to T20 (the Windows software never does this: its "Single Key" on a standard key is a [remap](matrix.md)): F5 set to `d8` with entry 13 = `10`, `1b 00 00` typed X in Game mode, as long as the key was held.
 
